@@ -1,0 +1,133 @@
+.box {
+  background-color: var(--grey);
+  border-radius: 24px;
+  padding: 62px;
+  margin: 100px 48px 48px;
+  position: relative;
+
+  .icon-box {
+    position: absolute;
+    width: 160px;
+    height: 160px;
+    left: calc(50% - 80px);
+    top: -80px;
+    background-color: #fff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 100%;
+    filter: drop-shadow(0 0 0.09rem #2d2d2d40);
+    img {
+      width: 50%;
+    }
+  }
+
+  .content {
+    margin-top: 24px;
+    padding: 12px;
+
+    h1 {
+      text-align: center;
+      margin: 32px 0;
+    }
+
+    ul {
+      list-style: none;
+      display: flex;
+      flex-direction: row;
+      padding: 12px;
+      justify-content: space-between;
+      li {
+        display: flex;
+        flex: 1;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        padding: 24px;
+        border: 3px solid #efefef;
+        max-width: 30%;
+        border-radius: 12px;
+        background-color: #fff;
+        cursor: pointer;
+        transition: all 0.3s ease-in-out;
+        &:hover {
+          border-color: var(--primary-color);
+          color: var(--primary-color);
+        }
+        .icon {
+          font-size: 4em;
+          stroke-width: 0.7;
+        }
+        p {
+          font-size: 80%;
+          margin-top: 8px;
+        }
+      }
+      .selected {
+        border-color: var(--primary-color);
+        background-color: var(--primary-color);
+        color: #fff;
+        &:hover {
+          color: #fff;
+        }
+      }
+    }
+    hr {
+      border: 2px solid #ececec;
+      margin: 24px 0;
+    }
+    form {
+      padding: 12px;
+      .input-group {
+        display: flex;
+
+        input {
+          flex: 4 1;
+          height: 54px;
+          border-radius: 8px;
+          border: 2px solid #e4e4e4;
+          background-color: #fff;
+          line-height: 50px;
+          font-weight: 800;
+          letter-spacing: 1px;
+          font-size: 16px;
+          padding: 0 16px;
+          color: #5a5959;
+          transition: all 0.3s ease-in-out;
+
+          &::placeholder {
+            color: #e4e4e4;
+          }
+          &:focus {
+            border: 2px solid #adadad;
+            outline: none;
+          }
+        }
+        button {
+          flex: 1 1;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          width: 100%;
+          height: 52px;
+          margin-left: 16px;
+          border-radius: 8px;
+          outline: none;
+          box-shadow: none;
+          background-color: #1074e7;
+          color: #fff;
+          border: none;
+          cursor: pointer;
+          transition: all 0.2s ease-in-out;
+          &:hover {
+            filter: opacity(0.8);
+          }
+
+          .icon {
+            font-size: 2em;
+          }
+        }
+      }
+    }
+  }
+}

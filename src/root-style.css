@@ -2,6 +2,7 @@
   --primary-color: #1074e7;
   --default-color: #2d2d2d;
   --grey: #f8f8f8;
+  --transition-default: all 0.3s ease-in-out;
 }
 
 @import url('https://fonts.googleapis.com/css2?family=Open+Sans+Condensed:wght@300;700&family=Open+Sans:wght@300;700&display=swap');

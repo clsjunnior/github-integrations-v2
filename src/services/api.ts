@@ -1,7 +1,17 @@
-import axios from 'axios';
+import { default as AxiosImport, AxiosInstance } from 'axios';
+class Api {
+  private axios: AxiosInstance;
+  private BASE_URL: string = 'https://api.github.com/';
 
-const api = axios.create({
-  baseURL: 'https://api.github.com/',
-});
+  constructor() {
+    this.axios = AxiosImport.create({
+      baseURL: this.BASE_URL,
+    });
+  }
 
-export default api;
+  public getInstance(): AxiosInstance {
+    return this.axios;
+  }
+}
+
+export default new Api();

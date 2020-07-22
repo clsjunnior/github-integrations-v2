@@ -23,12 +23,17 @@
   }
 
   .content {
-    margin-top: 24px;
     padding: 12px;
 
     h1 {
-      text-align: center;
       margin: 32px 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+
+      svg {
+        margin-right: 8px;
+      }
     }
 
     ul {

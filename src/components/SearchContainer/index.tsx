@@ -1,8 +1,15 @@
-import React, { useState } from 'react';
+import React, { useState, ChangeEvent, FormEvent, useEffect } from 'react';
 import './styles.scss';
-import { FiBookmark, FiUser, FiHash, FiSearch } from 'react-icons/fi';
+import {
+  FiBookmark,
+  FiUser,
+  FiHash,
+  FiSearch,
+  FiCompass,
+} from 'react-icons/fi';
 import logo from '../../assets/images/github-icon.svg';
 
+import GitHubAPI, { IRepositorie } from '../../utils/GitHubAPI';
 import ResultContainer from '../ResultContainer/index';
 
 const SearchContainer = () => {
@@ -10,6 +17,13 @@ const SearchContainer = () => {
     code: 0,
     searchLabel: '',
   });
+  const [formData, setFormData] = useState({
+    type: 0,
+    inputSearch: '',
+  });
+  const [count, setCount] = useState(0);
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const [repositories, setRepositories] = useState<IRepositorie[]>([]);
 
   const options = [
     {
@@ -32,6 +46,42 @@ const SearchContainer = () => {
     },
   ];
 
+  function handleInputChange(event: ChangeEvent<HTMLInputElement>) {
+    const { name, value } = event.target;
+    setFormData({ ...formData, [name]: value });
+  }
+
+  async function handleSubmit(event: FormEvent) {
+    event.preventDefault();
+    try {
+      const resp = await GitHubAPI.getSearchRepo(
+        formData.inputSearch,
+        currentPage
+      );
+      console.log(resp);
+      setCount(resp.total);
+      setRepositories(resp.repos);
+    } catch (err) {
+      console.error(err);
+    }
+  }
+
+  useEffect(() => {
+    console.log('page');
+    const data = async () => {
+      if (!formData.inputSearch) return false;
+
+      const resp = await GitHubAPI.getSearchRepo(
+        formData.inputSearch,
+        currentPage
+      );
+      console.log(resp);
+      setCount(resp.total);
+      setRepositories(resp.repos);
+    };
+    data();
+  }, [, currentPage]);
+
   return (
     <>
       <div className="box">
@@ -39,7 +89,9 @@ const SearchContainer = () => {
           <img src={logo} alt="Github octocat" title="icon octocat" />
         </div>
         <div className="content">
-          <h1>Github Integrations</h1>
+          <h1>
+            <FiCompass /> Github Explore
+          </h1>
           <div className="search">
             <ul>
               {options.map((item, key) => (
@@ -50,6 +102,7 @@ const SearchContainer = () => {
                       code: item.code,
                       searchLabel: item.searchLabel,
                     });
+                    setFormData({ ...formData, type: item.code });
                   }}
                   className={
                     selectedOption.code === item.code ? 'selected' : ''
@@ -61,7 +114,7 @@ const SearchContainer = () => {
               ))}
             </ul>
             <hr />
-            <form>
+            <form onSubmit={handleSubmit}>
               <div className="input-group">
                 <input
                   type="text"
@@ -69,8 +122,11 @@ const SearchContainer = () => {
                     selectedOption.searchLabel ||
                     'Selecione o tipo da pesquisa...'
                   }
+                  name="inputSearch"
+                  id="inputSearch"
+                  onChange={handleInputChange}
                 />
-                <button type="button" className="btn-search">
+                <button type="submit" className="btn-search">
                   <FiSearch className="icon" />
                 </button>
               </div>
@@ -78,7 +134,13 @@ const SearchContainer = () => {
           </div>
         </div>
       </div>
-      <ResultContainer />
+      {repositories.length !== 0 && (
+        <ResultContainer
+          repo={repositories}
+          total={count}
+          ChangePage={setCurrentPage}
+        />
+      )}
     </>
   );
 };

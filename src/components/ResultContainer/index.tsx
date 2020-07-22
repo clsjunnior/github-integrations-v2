@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import {
   FiGrid,
   FiMenu,
@@ -9,9 +9,26 @@ import {
 } from 'react-icons/fi';
 import { FaCircle } from 'react-icons/fa';
 import ReactPaginate from 'react-paginate';
+import moment from 'moment';
 import './styles.scss';
+import { IRepositorie } from '../../utils/GitHubAPI';
+import { Languages } from '../../utils/colors-languages';
+interface Props {
+  repo: IRepositorie[];
+  total: number;
+  ChangePage: (page: number) => void;
+}
 
-const ResultContainer = () => {
+const ResultContainer: React.FC<Props> = ({ repo, total, ChangePage }) => {
+  function handleLanguageColor(language: string) {
+    let color = Object.entries(Languages)
+      .filter(([key]) => key === language)
+      .map(([key, value]) => {
+        return value;
+      });
+    return color.toString();
+  }
+
   return (
     <div className="result-box">
       <div className="header">
@@ -27,97 +44,54 @@ const ResultContainer = () => {
         <hr />
         <div className="counter">
           <div>
-            <strong>100</strong> <small>resultados</small>
+            <strong>{total}</strong> <small>resultados</small>
           </div>
           <div>
             <strong>10 </strong>
-            <small>de</small>
-            <strong> 100</strong>
+            <small>de </small>
+            <strong>{total}</strong>
           </div>
         </div>
         <div className="list">
-          <div className="item">
-            <div className="title">
-              <FiBookmark />
-              <h2>
-                Repo name
-                <small>update at</small>
-              </h2>
-            </div>
-            <div className="description">
-              <p>lorem ipsun</p>
-            </div>
-            <div className="features">
-              <div className="icon-group">
-                <FiStar /> stars
+          {repo.map((item, key) => (
+            <div className="item" key={key}>
+              <div className="title">
+                <FiBookmark />
+                <h2>
+                  {item.full_name}
+                  <small>
+                    {moment(item.updated_at).format('DD/MM/YYYY HH:mm')}
+                  </small>
+                </h2>
               </div>
-              <div className="icon-group">
-                <FiAlertCircle /> stars
+              <div className="description">
+                <p>{item.description}</p>
               </div>
-              <div className="icon-group">
-                <FaCircle /> language
-              </div>
-            </div>
-          </div>
-          <div className="item">
-            <div className="title">
-              <FiBookmark />
-              <h2>
-                Repo name
-                <small>update at</small>
-              </h2>
-            </div>
-            <div className="description">
-              <p>lorem ipsun</p>
-            </div>
-            <div className="features">
-              <div className="icon-group">
-                <FiStar /> stars
-              </div>
-              <div className="icon-group">
-                <FiAlertCircle /> stars
-              </div>
-              <div className="icon-group">
-                <FaCircle /> language
+              <div className="features">
+                <div className="icon-group">
+                  <FiStar /> {item.stargazers_count}
+                </div>
+                <div className="icon-group">
+                  <FiAlertCircle /> {item.open_issues}
+                </div>
+                <div className="icon-group">
+                  <FaCircle color={handleLanguageColor(item.language)} />{' '}
+                  {item.language}{' '}
+                </div>
               </div>
             </div>
-          </div>
-          <div className="item">
-            <div className="title">
-              <FiBookmark />
-              <h2>
-                Repo name
-                <small>update at</small>
-              </h2>
-            </div>
-            <div className="description">
-              <p>lorem ipsun</p>
-            </div>
-            <div className="features">
-              <div className="icon-group">
-                <FiStar /> stars
-              </div>
-              <div className="icon-group">
-                <FiAlertCircle /> stars
-              </div>
-              <div className="icon-group">
-                <FaCircle /> language
-              </div>
-            </div>
-          </div>
+          ))}
         </div>
       </div>
       <div className="footer">
         <ReactPaginate
           previousLabel={'<'}
           nextLabel={'>'}
-          // breakLabel={'...'}
-          // breakClassName={'break-me'}
-          pageCount={10}
-          marginPagesDisplayed={2}
-          pageRangeDisplayed={1}
-          onPageChange={() => {
-            console.log('change');
+          pageCount={Math.ceil(total / 10)}
+          marginPagesDisplayed={1}
+          pageRangeDisplayed={3}
+          onPageChange={(e) => {
+            ChangePage(e.selected === 0 ? 1 : e.selected + 1);
           }}
           containerClassName={'pagination'}
           activeClassName={'active'}

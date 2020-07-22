@@ -23,6 +23,7 @@ export interface IRepositorie {
   open_issues: number;
   updated_at: string;
   url: string;
+  html_url: string;
 }
 
 export default new GitHubAPI();

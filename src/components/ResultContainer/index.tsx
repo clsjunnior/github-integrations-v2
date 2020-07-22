@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import {
   FiGrid,
   FiMenu,
@@ -6,20 +6,30 @@ import {
   FiBookmark,
   FiAlertCircle,
   FiStar,
+  FiExternalLink,
 } from 'react-icons/fi';
 import { FaCircle } from 'react-icons/fa';
 import ReactPaginate from 'react-paginate';
 import moment from 'moment';
 import './styles.scss';
 import { IRepositorie } from '../../utils/GitHubAPI';
+import InsideLoading from '../InsideLoading';
 import { Languages } from '../../utils/colors-languages';
 interface Props {
   repo: IRepositorie[];
   total: number;
   ChangePage: (page: number) => void;
+  currentPage: number;
+  isLoading: boolean;
 }
 
-const ResultContainer: React.FC<Props> = ({ repo, total, ChangePage }) => {
+const ResultContainer: React.FC<Props> = ({
+  repo,
+  total,
+  ChangePage,
+  currentPage,
+  isLoading,
+}) => {
   function handleLanguageColor(language: string) {
     let color = Object.entries(Languages)
       .filter(([key]) => key === language)
@@ -47,20 +57,27 @@ const ResultContainer: React.FC<Props> = ({ repo, total, ChangePage }) => {
             <strong>{total}</strong> <small>resultados</small>
           </div>
           <div>
-            <strong>10 </strong>
+            <strong>{10 * currentPage} </strong>
             <small>de </small>
             <strong>{total}</strong>
           </div>
         </div>
         <div className="list">
+          <InsideLoading loading={isLoading} />
           {repo.map((item, key) => (
             <div className="item" key={key}>
+              <a href={item.html_url} target="_blank">
+                <div className="link-overlay">
+                  <FiExternalLink />
+                  <p>Open Project</p>
+                </div>
+              </a>
               <div className="title">
                 <FiBookmark />
                 <h2>
                   {item.full_name}
                   <small>
-                    {moment(item.updated_at).format('DD/MM/YYYY HH:mm')}
+                    {moment(item.updated_at).format('DD/MM/YYYY - HH:mm')}
                   </small>
                 </h2>
               </div>

@@ -7,6 +7,7 @@ import {
   FiSearch,
   FiCompass,
 } from 'react-icons/fi';
+import { AiOutlineLoading3Quarters } from 'react-icons/ai';
 import logo from '../../assets/images/github-icon.svg';
 
 import GitHubAPI, { IRepositorie } from '../../utils/GitHubAPI';
@@ -23,6 +24,7 @@ const SearchContainer = () => {
   });
   const [count, setCount] = useState(0);
   const [currentPage, setCurrentPage] = useState<number>(1);
+  const [loadingRequest, setLoadingRequest] = useState<boolean>(false);
   const [repositories, setRepositories] = useState<IRepositorie[]>([]);
 
   const options = [
@@ -53,6 +55,7 @@ const SearchContainer = () => {
 
   async function handleSubmit(event: FormEvent) {
     event.preventDefault();
+    setLoadingRequest(true);
     try {
       const resp = await GitHubAPI.getSearchRepo(
         formData.inputSearch,
@@ -63,24 +66,30 @@ const SearchContainer = () => {
       setRepositories(resp.repos);
     } catch (err) {
       console.error(err);
+    } finally {
+      setLoadingRequest(false);
     }
   }
 
   useEffect(() => {
-    console.log('page');
     const data = async () => {
       if (!formData.inputSearch) return false;
-
-      const resp = await GitHubAPI.getSearchRepo(
-        formData.inputSearch,
-        currentPage
-      );
-      console.log(resp);
-      setCount(resp.total);
-      setRepositories(resp.repos);
+      try {
+        setLoadingRequest(true);
+        const resp = await GitHubAPI.getSearchRepo(
+          formData.inputSearch,
+          currentPage
+        );
+        setCount(resp.total);
+        setRepositories(resp.repos);
+      } catch (err) {
+        console.error(err);
+      } finally {
+        setLoadingRequest(false);
+      }
     };
     data();
-  }, [, currentPage]);
+  }, [currentPage]);
 
   return (
     <>
@@ -126,8 +135,16 @@ const SearchContainer = () => {
                   id="inputSearch"
                   onChange={handleInputChange}
                 />
-                <button type="submit" className="btn-search">
-                  <FiSearch className="icon" />
+                <button
+                  type="submit"
+                  className="btn-search"
+                  disabled={loadingRequest}
+                >
+                  {loadingRequest ? (
+                    <AiOutlineLoading3Quarters className="spin icon" />
+                  ) : (
+                    <FiSearch className="icon" />
+                  )}
                 </button>
               </div>
             </form>
@@ -139,6 +156,8 @@ const SearchContainer = () => {
           repo={repositories}
           total={count}
           ChangePage={setCurrentPage}
+          currentPage={currentPage}
+          isLoading={loadingRequest}
         />
       )}
     </>

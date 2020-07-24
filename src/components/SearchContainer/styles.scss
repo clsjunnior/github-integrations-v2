@@ -1,9 +1,16 @@
+@import '../../assets/styles/functions.scss';
+
 .box {
   background-color: var(--grey);
   border-radius: 24px;
   padding: 62px;
   margin: 100px 48px 48px;
   position: relative;
+
+  @include mobal() {
+    padding: 14px;
+    margin: 50px 24px 24px;
+  }
 
   .icon-box {
     position: absolute;
@@ -20,6 +27,13 @@
     img {
       width: 50%;
     }
+
+    @include mobal() {
+      width: 80px;
+      height: 80px;
+      left: calc(50% - 40px);
+      top: -40px;
+    }
   }
 
   .content {
@@ -30,6 +44,10 @@
       display: flex;
       justify-content: center;
       align-items: center;
+
+      @include mobal() {
+        margin: 16px 0;
+      }
 
       svg {
         margin-right: 8px;
@@ -42,6 +60,11 @@
       flex-direction: row;
       padding: 12px;
       justify-content: space-between;
+
+      @include mobal() {
+        flex-direction: column;
+      }
+
       li {
         display: flex;
         flex: 1;
@@ -67,6 +90,10 @@
           font-size: 80%;
           margin-top: 8px;
         }
+
+        @include mobal() {
+          max-width: 100%;
+        }
       }
       .selected {
         border-color: var(--primary-color);
@@ -74,6 +101,18 @@
         color: #fff;
         &:hover {
           color: #fff;
+        }
+      }
+      .disabled {
+        background-color: #f8f8f8;
+        color: #c5c5c5 !important;
+        cursor: not-allowed;
+        &:hover {
+          border-color: #efefef;
+        }
+
+        @include mobal() {
+          display: none;
         }
       }
     }
@@ -85,7 +124,9 @@
       padding: 12px;
       .input-group {
         display: flex;
-
+        @include mobal() {
+          flex-direction: column;
+        }
         input {
           flex: 4 1;
           height: 54px;
@@ -106,6 +147,9 @@
           &:focus {
             border: 2px solid #adadad;
             outline: none;
+          }
+          @include mobal() {
+            height: auto;
           }
         }
         button {
@@ -129,6 +173,10 @@
           }
           .icon {
             font-size: 2em;
+          }
+          @include mobal() {
+            padding: 10px;
+            margin: 10px 0;
           }
         }
       }

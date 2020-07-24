@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   FiGrid,
   FiMenu,
@@ -21,6 +21,7 @@ interface Props {
   ChangePage: (page: number) => void;
   currentPage: number;
   isLoading: boolean;
+  CloseResult: () => void;
 }
 
 const ResultContainer: React.FC<Props> = ({
@@ -29,7 +30,10 @@ const ResultContainer: React.FC<Props> = ({
   ChangePage,
   currentPage,
   isLoading,
+  CloseResult,
 }) => {
+  const [viewClass, setViewClass] = useState('view-grid');
+
   function handleLanguageColor(language: string) {
     let color = Object.entries(Languages)
       .filter(([key]) => key === language)
@@ -39,15 +43,34 @@ const ResultContainer: React.FC<Props> = ({
     return color.toString();
   }
 
+  function handleViewResult(type: string) {
+    setViewClass(type);
+  }
+
   return (
     <div className="result-box">
       <div className="header">
         <div className="view-mode">
-          <FiGrid className="icon" />
-          <FiMenu className="icon" />
+          <FiGrid
+            className={viewClass === 'view-grid' ? `icon active` : `icon`}
+            onClick={() => {
+              handleViewResult('view-grid');
+            }}
+          />
+          <FiMenu
+            className={viewClass === 'view-list' ? `icon active` : `icon`}
+            onClick={() => {
+              handleViewResult('view-list');
+            }}
+          />
         </div>
         <div className="close">
-          <FiX className="icon" />
+          <FiX
+            className="icon"
+            onClick={() => {
+              CloseResult();
+            }}
+          />
         </div>
       </div>
       <div className="content">
@@ -62,11 +85,11 @@ const ResultContainer: React.FC<Props> = ({
             <strong>{total}</strong>
           </div>
         </div>
-        <div className="list">
+        <div className={`list ${viewClass}`}>
           <InsideLoading loading={isLoading} />
           {repo.map((item, key) => (
             <div className="item" key={key}>
-              <a href={item.html_url} target="_blank">
+              <a href={item.html_url} target="_blank" rel="noopener noreferrer">
                 <div className="link-overlay">
                   <FiExternalLink />
                   <p>Open Project</p>
@@ -86,10 +109,10 @@ const ResultContainer: React.FC<Props> = ({
               </div>
               <div className="features">
                 <div className="icon-group">
-                  <FiStar /> {item.stargazers_count}
+                  <FiStar className="star" /> {item.stargazers_count}
                 </div>
                 <div className="icon-group">
-                  <FiAlertCircle /> {item.open_issues}
+                  <FiAlertCircle className="issue" /> {item.open_issues}
                 </div>
                 <div className="icon-group">
                   <FaCircle color={handleLanguageColor(item.language)} />{' '}

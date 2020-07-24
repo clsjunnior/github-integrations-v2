@@ -18,7 +18,7 @@ const Loading = () => {
 
   return (
     <div className="loader">
-      <img src={logo} />
+      <img src={logo} alt="Github integrations" />
     </div>
   );
 };

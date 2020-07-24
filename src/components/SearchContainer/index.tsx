@@ -33,18 +33,21 @@ const SearchContainer = () => {
       icon: <FiBookmark className="icon" />,
       label: 'Repositórios',
       searchLabel: 'Busca por Repositórios...',
+      active: true,
     },
     {
       code: 2,
       icon: <FiUser className="icon" />,
       label: 'Usuários',
       searchLabel: 'Busca por Usuários...',
+      active: false,
     },
     {
       code: 3,
       icon: <FiHash className="icon" />,
       label: 'Tópicos',
       searchLabel: 'Busca por Tópicos...',
+      active: false,
     },
   ];
 
@@ -61,7 +64,6 @@ const SearchContainer = () => {
         formData.inputSearch,
         currentPage
       );
-      console.log(resp);
       setCount(resp.total);
       setRepositories(resp.repos);
     } catch (err) {
@@ -69,6 +71,16 @@ const SearchContainer = () => {
     } finally {
       setLoadingRequest(false);
     }
+  }
+
+  function handleCloseResult() {
+    setRepositories([]);
+    setCurrentPage(1);
+    setCount(1);
+    setFormData({
+      type: 0,
+      inputSearch: '',
+    });
   }
 
   useEffect(() => {
@@ -104,22 +116,35 @@ const SearchContainer = () => {
           <div className="search">
             <ul>
               {options.map((item, key) => (
-                <li
-                  key={key}
-                  onClick={() => {
-                    setSelectedOption({
-                      code: item.code,
-                      searchLabel: item.searchLabel,
-                    });
-                    setFormData({ ...formData, type: item.code });
-                  }}
-                  className={
-                    selectedOption.code === item.code ? 'selected' : ''
-                  }
-                >
-                  {item.icon}
-                  <p>{item.label}</p>
-                </li>
+                <React.Fragment key={key}>
+                  {item.active ? (
+                    <li
+                      key={key}
+                      onClick={() => {
+                        setSelectedOption({
+                          code: item.code,
+                          searchLabel: item.searchLabel,
+                        });
+                        setFormData({ ...formData, type: item.code });
+                      }}
+                      className={
+                        selectedOption.code === item.code ? 'selected' : ''
+                      }
+                    >
+                      {item.icon}
+                      <p>{item.label}</p>
+                    </li>
+                  ) : (
+                    <li
+                      key={key}
+                      className={`disabled`}
+                      title="Implementação em breve..."
+                    >
+                      {item.icon}
+                      <p>{item.label}</p>
+                    </li>
+                  )}
+                </React.Fragment>
               ))}
             </ul>
             <hr />
@@ -134,6 +159,7 @@ const SearchContainer = () => {
                   name="inputSearch"
                   id="inputSearch"
                   onChange={handleInputChange}
+                  value={formData.inputSearch}
                 />
                 <button
                   type="submit"
@@ -158,6 +184,7 @@ const SearchContainer = () => {
           ChangePage={setCurrentPage}
           currentPage={currentPage}
           isLoading={loadingRequest}
+          CloseResult={handleCloseResult}
         />
       )}
     </>

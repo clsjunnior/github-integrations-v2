@@ -1,4 +1,4 @@
-![Ecoleta Logo](/assets/images/cover.gif)
+![Ecoleta Logo](/cover.gif)
 
 
 ### :on: Github Explorer

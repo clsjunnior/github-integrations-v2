@@ -1,12 +1,15 @@
-![Ecoleta Logo](/assets/images/cover.gif)
+![Ecoleta Logo](/cover.gif)
 
+<p style="text-align: center">
 <a href="https://www.linkedin.com/in/celso-junior/">
 <img alt="Feito por" src="https://img.shields.io/badge/Feito%20por-Celso%20Junnior-orange">
 </a>
-![GitHub language count](https://img.shields.io/github/languages/count/clsjunnior/github-integrations-v2)
-![GitHub top language](https://img.shields.io/github/languages/top/clsjunnior/github-integrations-v2)
-![GitHub stars](https://img.shields.io/github/stars/clsjunnior/github-integrations-v2?style=social)
-![GitHub last commit](https://img.shields.io/github/last-commit/clsjunnior/github-integrations-v2)
+<img alt="GitHub language count" src="https://img.shields.io/github/languages/count/clsjunnior/github-integrations-v2">
+<img alt="GitHub language top" src="https://img.shields.io/github/languages/top/clsjunnior/github-integrations-v2">
+<img alt="GitHub stars" src="https://img.shields.io/github/stars/clsjunnior/github-integrations-v2?style=social">
+<img alt="GitHub last commits" src="https://img.shields.io/github/last-commit/clsjunnior/github-integrations-v2">
+</p>
+
 
 ### :collision: Github Explorer
 

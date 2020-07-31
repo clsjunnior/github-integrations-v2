@@ -1,0 +1,22 @@
+.go-back {
+  display: flex;
+  padding: 12px;
+  margin-bottom: 24px;
+  justify-content: flex-start;
+  color: #fff;
+  align-items: center;
+  font-weight: bold;
+  &:hover {
+    cursor: pointer;
+    color: var(--primary-color);
+    svg {
+      color: var(--primary-color);
+    }
+  }
+
+  svg {
+    font-size: 2em;
+    color: #ffffff;
+    margin-right: 14px;
+  }
+}

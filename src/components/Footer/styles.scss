@@ -1,0 +1,16 @@
+footer {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #fff;
+  margin-bottom: 20px;
+  svg {
+    color: var(--primary-color);
+  }
+  a {
+    color: var(--primary-color);
+    text-decoration: none;
+    font-weight: bold;
+  }
+}

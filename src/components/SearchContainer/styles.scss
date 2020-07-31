@@ -4,12 +4,14 @@
   background-color: var(--grey);
   border-radius: 24px;
   padding: 62px;
-  margin: 100px 48px 48px;
+  margin: 100px auto 48px;
   position: relative;
+  width: 650px;
 
   @include mobal() {
     padding: 14px;
-    margin: 50px 24px 24px;
+    width: 100%;
+    margin: 50px auto;
   }
 
   .icon-box {
@@ -73,7 +75,7 @@
         align-items: center;
         padding: 24px;
         border: 3px solid #efefef;
-        max-width: 30%;
+        margin: 0 10px;
         border-radius: 12px;
         background-color: #fff;
         cursor: pointer;
@@ -93,6 +95,10 @@
 
         @include mobal() {
           max-width: 100%;
+          margin-bottom: 12px;
+          &:last-child {
+            margin-bottom: 0px;
+          }
         }
       }
       .selected {

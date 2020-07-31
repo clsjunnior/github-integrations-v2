@@ -1,16 +1,10 @@
 import React, { useState, ChangeEvent, FormEvent, useEffect } from 'react';
 import './styles.scss';
-import {
-  FiBookmark,
-  FiUser,
-  FiHash,
-  FiSearch,
-  FiCompass,
-} from 'react-icons/fi';
+import { FiBookmark, FiUser, FiSearch, FiCompass } from 'react-icons/fi';
 import { AiOutlineLoading3Quarters } from 'react-icons/ai';
 import logo from '../../assets/images/github-icon.svg';
-
-import GitHubAPI, { IRepositorie } from '../../utils/GitHubAPI';
+import GitHubAPI from '../../utils/GitHubAPI';
+import { IRepositorie, IUserSearch, IDataResult } from '../../utils/Intefaces';
 import ResultContainer from '../ResultContainer/index';
 
 const SearchContainer = () => {
@@ -25,7 +19,11 @@ const SearchContainer = () => {
   const [count, setCount] = useState(0);
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [loadingRequest, setLoadingRequest] = useState<boolean>(false);
-  const [repositories, setRepositories] = useState<IRepositorie[]>([]);
+  const [isOpenResult, setIsOpenResult] = useState<boolean>(false);
+  const [dataResult, setDataResult] = useState<IDataResult>({
+    repositories: [],
+    users: [],
+  });
 
   const options = [
     {
@@ -40,14 +38,7 @@ const SearchContainer = () => {
       icon: <FiUser className="icon" />,
       label: 'Usuários',
       searchLabel: 'Busca por Usuários...',
-      active: false,
-    },
-    {
-      code: 3,
-      icon: <FiHash className="icon" />,
-      label: 'Tópicos',
-      searchLabel: 'Busca por Tópicos...',
-      active: false,
+      active: true,
     },
   ];
 
@@ -56,16 +47,29 @@ const SearchContainer = () => {
     setFormData({ ...formData, [name]: value });
   }
 
-  async function handleSubmit(event: FormEvent) {
-    event.preventDefault();
+  async function handleSearch() {
     setLoadingRequest(true);
     try {
-      const resp = await GitHubAPI.getSearchRepo(
-        formData.inputSearch,
-        currentPage
-      );
-      setCount(resp.total);
-      setRepositories(resp.repos);
+      if (formData.type === 1) {
+        const resp = await GitHubAPI.getSearchRepo(
+          formData.inputSearch,
+          currentPage
+        );
+        setCount(resp.total);
+        HandleDataResult(resp.repos, []);
+      } else {
+        const resp = await GitHubAPI.getSearchUser(
+          formData.inputSearch,
+          currentPage
+        );
+        setCount(resp.total);
+        sessionStorage.setItem('search', JSON.stringify(formData));
+        sessionStorage.setItem(
+          'searchResp',
+          JSON.stringify([resp.users, resp.total])
+        );
+        HandleDataResult([], resp.users);
+      }
     } catch (err) {
       console.error(err);
     } finally {
@@ -73,35 +77,64 @@ const SearchContainer = () => {
     }
   }
 
+  async function handleSubmit(event: FormEvent) {
+    event.preventDefault();
+    handleSearch();
+  }
+
+  function HandleDataResult(repo: IRepositorie[], user: IUserSearch[]) {
+    setDataResult({
+      repositories: repo,
+      users: user,
+    });
+    setIsOpenResult(true);
+  }
+
   function handleCloseResult() {
-    setRepositories([]);
+    setDataResult({
+      repositories: [],
+      users: [],
+    });
     setCurrentPage(1);
     setCount(1);
     setFormData({
       type: 0,
       inputSearch: '',
     });
+    setIsOpenResult(false);
+    sessionStorage.clear();
   }
 
   useEffect(() => {
     const data = async () => {
       if (!formData.inputSearch) return false;
-      try {
-        setLoadingRequest(true);
-        const resp = await GitHubAPI.getSearchRepo(
-          formData.inputSearch,
-          currentPage
-        );
-        setCount(resp.total);
-        setRepositories(resp.repos);
-      } catch (err) {
-        console.error(err);
-      } finally {
-        setLoadingRequest(false);
-      }
+      handleSearch();
     };
     data();
   }, [currentPage]);
+
+  let searchHistory = sessionStorage.getItem('search');
+
+  useEffect(() => {
+    const data = async () => {
+      if (!searchHistory) return false;
+      let search = JSON.parse(sessionStorage.getItem('search') as string);
+      let searchResp = JSON.parse(
+        sessionStorage.getItem('searchResp') as string
+      );
+      setSelectedOption({
+        code: search.type,
+        searchLabel: '',
+      });
+      setFormData({
+        type: search.type,
+        inputSearch: search.inputSearch,
+      });
+      setCount(searchResp[1]);
+      HandleDataResult([], searchResp[0]);
+    };
+    data();
+  }, []);
 
   return (
     <>
@@ -125,7 +158,11 @@ const SearchContainer = () => {
                           code: item.code,
                           searchLabel: item.searchLabel,
                         });
-                        setFormData({ ...formData, type: item.code });
+                        setFormData({ type: item.code, inputSearch: '' });
+                        setCurrentPage(1);
+                        setCount(1);
+                        setIsOpenResult(false);
+                        sessionStorage.clear();
                       }}
                       className={
                         selectedOption.code === item.code ? 'selected' : ''
@@ -177,16 +214,15 @@ const SearchContainer = () => {
           </div>
         </div>
       </div>
-      {repositories.length !== 0 && (
-        <ResultContainer
-          repo={repositories}
-          total={count}
-          ChangePage={setCurrentPage}
-          currentPage={currentPage}
-          isLoading={loadingRequest}
-          CloseResult={handleCloseResult}
-        />
-      )}
+      <ResultContainer
+        data={dataResult}
+        total={count}
+        ChangePage={setCurrentPage}
+        currentPage={currentPage}
+        isLoading={loadingRequest}
+        CloseResult={handleCloseResult}
+        isOpen={isOpenResult}
+      />
     </>
   );
 };

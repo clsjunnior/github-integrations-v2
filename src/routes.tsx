@@ -6,7 +6,7 @@ import User from './pages/User';
 
 const Routes = () => {
   return (
-    <BrowserRouter>
+    <BrowserRouter basename={`${process.env.PUBLIC_URL}/`}>
       <Route path="/" exact component={Home}></Route>
       <Route path="/user" exact component={User}></Route>
     </BrowserRouter>

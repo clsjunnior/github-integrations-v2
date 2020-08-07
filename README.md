@@ -1,4 +1,4 @@
-![Ecoleta Logo](/cover.gif)
+![Github Explorer Logo](/demo.gif)
 
 <p style="text-align: center">
 <a href="https://www.linkedin.com/in/celso-junior/">

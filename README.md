@@ -1,4 +1,6 @@
-![Github Explorer Logo](/demo.gif)
+![Github Explorer Logo|800x800  ,100%](/demo.gif) 
+ 
+<img src="/demo.gif" alt="drawing" width="800"/>
 
 <p style="text-align: center">
 <a href="https://www.linkedin.com/in/celso-junior/">

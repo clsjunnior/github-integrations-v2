@@ -18,7 +18,7 @@ Projeto realizado para estudos em TypeScript, API do integrações do Github e R
 
 O layout foi construído do zero, mostrando grande evolução para a versão 1.0 feita anteriormente.
 
-:link: [Projeto Online Aqui!](https://inspiring-newton-b3b3a3.netlify.app/)
+:link: [Projeto Online Aqui!](https://clsjunnior.github.io/github-integrations-v2/)
 
 
 
